@@ -20,3 +20,5 @@ dist/
 
 **/node_modules
 key.enc
+
+.iceberg-load*

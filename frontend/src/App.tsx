@@ -22,12 +22,6 @@ export function AppShell() {
           >
             Dashboard
           </NavLink>
-          <NavLink
-            to="/devices/demo-device"
-            className={({ isActive }) => (isActive ? 'nav-link nav-link--active' : 'nav-link')}
-          >
-            Device detail
-          </NavLink>
         </nav>
       </header>
 
