@@ -1,0 +1,2237 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Full-stack IoT device monitoring application built with spec-coding methodology using IBM watsonx.data">
+      
+      
+        <meta name="author" content="dwakeman">
+      
+      
+        <link rel="canonical" href="https://dwakeman.github.io/spec-coding-iot-app/getting-unstuck/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Getting unstuck — agent playbook - Sensor Health Dashboard</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#getting-unstuck-agent-playbook" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Sensor Health Dashboard" class="md-header__button md-logo" aria-label="Sensor Health Dashboard" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Sensor Health Dashboard
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Getting unstuck — agent playbook
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/dwakeman/spec-coding-iot-app" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dwakeman/spec-coding-iot-app
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started/overview/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../spec-coding/introduction/" class="md-tabs__link">
+          
+  
+  
+  Spec-Coding Methodology
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../architecture/overview/" class="md-tabs__link">
+          
+  
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../user-guide/dashboard/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../api/overview/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../development/setup/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../operations/demo-readiness/" class="md-tabs__link">
+          
+  
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../reference/requirements-traceability/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Sensor Health Dashboard" class="md-nav__button md-logo" aria-label="Sensor Health Dashboard" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Sensor Health Dashboard
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dwakeman/spec-coding-iot-app" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dwakeman/spec-coding-iot-app
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/quick-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spec-Coding Methodology
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Spec-Coding Methodology
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spec-coding/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spec-coding/requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requirements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spec-coding/design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spec-coding/sprint-planning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint Planning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spec-coding/verification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/data-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/api-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/data-access-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Access Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/federated-query-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Federated Query Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/device-details/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device Details
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/anomaly-detection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anomaly Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/filtering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Filtering & Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/endpoints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Endpoints
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/data-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/error-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error Handling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operations/demo-readiness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Demo Readiness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operations/troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operations/windows-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operations/performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/requirements-traceability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requirements Traceability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/project-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Summary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/installation-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation Summary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/final-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Final Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="getting-unstuck-agent-playbook">Getting unstuck — agent playbook<a class="headerlink" href="#getting-unstuck-agent-playbook" title="Permanent link">&para;</a></h1>
+<p><strong>You are the AI coding agent.</strong> The workshop attendee has hit a problem and asked you to read this doc. Use it to diagnose and fix.</p>
+<p>The workshop's hard rule is <em>no manual actions</em> — the attendee does not edit files or run commands; you do. So when you find the issue, fix it. Don't ask permission for routine fixes. Act, then summarize what changed in one or two sentences.</p>
+<hr />
+<h2 id="how-to-use-this-doc">How to use this doc<a class="headerlink" href="#how-to-use-this-doc" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Read the attendee's last message — the error, the symptom, what they saw.</li>
+<li>Find the section below that matches. Sections are grouped by exercise plus a general triage section.</li>
+<li>Run the <strong>diagnostic</strong> to confirm. If it doesn't match, scan adjacent sections — symptoms can overlap.</li>
+<li>Apply the <strong>action</strong>. Update files in place. Run any commands needed.</li>
+<li>Report back: what was wrong (one sentence), what you did (one sentence), what to verify next (one sentence). No apologies, no lectures.</li>
+</ol>
+<p>If nothing here matches, see the <a href="#nothing-matches">last section</a> for fallback steps.</p>
+<hr />
+<h2 id="cassandra-registration-manual-step-the-install-cant-do">Cassandra registration — manual step the install can't do<a class="headerlink" href="#cassandra-registration-manual-step-the-install-cant-do" title="Permanent link">&para;</a></h2>
+<p>After the installer prints <code>[STEP 7/7] Installation Complete!</code>, <strong>the attendee must register Cassandra in the watsonx.data UI by hand</strong>. The dev edition doesn't expose an API for this. If federated queries from Presto into Cassandra fail with "no such schema/catalog <code>cassandra_catalog</code>," this step was likely skipped or done with wrong values.</p>
+<p><strong>Symptom (in code/queries):</strong> Presto queries like <code>SELECT * FROM cassandra_catalog.workshop.customers</code> fail with <code>Schema 'cassandra_catalog.workshop' does not exist</code> or similar.</p>
+<p><strong>Diagnostic:</strong> ask the attendee to open <code>https://localhost:9443</code> and check <strong>Infrastructure Manager → Databases</strong>. If <code>cassandra_workshop</code> isn't listed, registration was never done. If it's listed but the catalog name doesn't match <code>cassandra_catalog</code>, the form was filled wrong.</p>
+<p><strong>Action — direct the attendee to register Cassandra now:</strong></p>
+<blockquote>
+<p>"Open <code>https://localhost:9443</code>. Log in as <code>ibmlhadmin</code> / <code>password</code>. Go to <strong>Infrastructure Manager → Databases → Add database</strong>. Pick <strong>Apache Cassandra</strong> and enter exactly:
+- Display name: <code>cassandra_workshop</code>
+- Hostname: <code>host.containers.internal</code>
+- Port: <code>9042</code>
+- Username: <code>cassandra</code>
+- Password: <code>cassandra</code>
+- Catalog name: <code>cassandra_catalog</code></p>
+<p>Click <strong>Test connection</strong> (it should succeed), then <strong>Add</strong>. The catalog is created in the same form — no separate associate step."</p>
+</blockquote>
+<p>After they confirm, retry the failing query. If it still fails, the catalog name might be wrong — check <strong>Databases</strong> in the UI, click the entry, and verify the catalog reads <code>cassandra_catalog</code> exactly.</p>
+<h3 id="browser-refuses-to-load-httpslocalhost9443">Browser refuses to load <code>https://localhost:9443</code><a class="headerlink" href="#browser-refuses-to-load-httpslocalhost9443" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> the attendee opens <code>https://localhost:9443</code> and the browser shows <code>NET::ERR_CERT_AUTHORITY_INVALID</code> (or similar) with <strong>no "Advanced → Proceed to localhost (unsafe)" link</strong> — just a hard block. Common on corp-managed Edge / Chrome where strict-cert policies are enforced or HSTS is preloaded for <code>localhost</code>.</p>
+<p><strong>Diagnostic:</strong> ask the attendee whether they see an <strong>Advanced</strong> button on the warning page. If yes, this isn't the bug — they should click through. If there's no button at all, the browser is blocking the bypass.</p>
+<p><strong>Action — try in this order:</strong></p>
+<ol>
+<li>In Chrome / Edge, navigate to <code>chrome://flags/#allow-insecure-localhost</code> (or <code>edge://flags/#allow-insecure-localhost</code>), enable it, restart the browser, and retry. This re-enables the bypass for <code>localhost</code> only.</li>
+<li>Try Firefox — its self-signed-cert handling on <code>localhost</code> is more permissive than corp-managed Chromium.</li>
+<li>If neither works (corp policy is preventing the flag from sticking), the attendee can use <code>curl -k https://localhost:9443/lakehouse/api/v3/ready</code> to confirm the service is up and continue the workshop without the UI — most queries the agent runs will go through the Presto HTTP API anyway, not the UI. The one step that genuinely requires the UI is registering Cassandra; without UI access, the attendee can't complete that step on a corp box.</li>
+</ol>
+<hr />
+<h2 id="general-verifying-your-own-output">General — verifying your own output<a class="headerlink" href="#general-verifying-your-own-output" title="Permanent link">&para;</a></h2>
+<p>Before declaring something done, run these three cross-checks. If any fail, fix before reporting.</p>
+<ul>
+<li><strong>Table names exist.</strong> Every table referenced in <code>spec/design.md</code>, generated SQL, or code must appear verbatim in <a href="../SCHEMAS.md"><code>SCHEMAS.md</code></a> or the per-domain <code>cassandra_schema.cql</code> / <code>iceberg_schema.sql</code>. Common hallucinations to grep for: <code>customer_dim</code>, <code>sales_fact</code>, <code>daily_metrics</code>, <code>customer_cohort_analysis</code>. None of those exist in this workshop.</li>
+<li><strong>REQ-IDs covered.</strong> Every REQ-ID in <code>spec/requirements.md</code> must appear in at least one endpoint description in <code>api/openapi.yaml</code>. Conversely, every endpoint must trace back to at least one REQ.</li>
+<li><strong>Tests match the spec, not the implementation.</strong> Tests assert what <code>openapi.yaml</code> says the response should be. If the implementation differs, the implementation is wrong, not the test. Never weaken an assertion to make a test pass; if you genuinely believe the spec is wrong, update <code>openapi.yaml</code> first and explain why.</li>
+</ul>
+<hr />
+<h2 id="exercise-1-requirements">Exercise 1 — Requirements<a class="headerlink" href="#exercise-1-requirements" title="Permanent link">&para;</a></h2>
+<h3 id="vague-untestable-reqs">Vague, untestable REQs<a class="headerlink" href="#vague-untestable-reqs" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> REQs use fuzzy adjectives — "fast", "reliable", "easy", "good", "scalable" — that no one could write a test from.</p>
+<p><strong>Diagnostic:</strong> scan <code>spec/requirements.md</code>. List each REQ containing a fuzzy term or that lacks acceptance criteria specific enough to write a one-sentence test.</p>
+<p><strong>Action:</strong> rewrite each fuzzy REQ as concrete and measurable. Example: "the system is fast" → "REQ-007: List endpoints return within 2 seconds at the 95<sup>th</sup> percentile." Update the file in place.</p>
+<h3 id="implementation-leaking-into-requirements">Implementation leaking into requirements<a class="headerlink" href="#implementation-leaking-into-requirements" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> <code>requirements.md</code> mentions databases (Cassandra, Iceberg, Postgres), frameworks (FastAPI, Express, React), HTTP methods, JSON, libraries, or any other technical detail.</p>
+<p><strong>Diagnostic:</strong> grep <code>requirements.md</code> for: cassandra, iceberg, presto, fastapi, express, react, json, http, get, post, sql, api, database, query, table, endpoint.</p>
+<p><strong>Action:</strong> strip every match. Requirements describe what the user sees, not how it's built. Update in place.</p>
+<h3 id="scope-is-too-big-for-the-time-budget">Scope is too big for the time budget<a class="headerlink" href="#scope-is-too-big-for-the-time-budget" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> more than ~10 REQs, or REQs whose combined implementation clearly exceeds 60 minutes of build time.</p>
+<p><strong>Diagnostic:</strong> the workshop has a 60-minute build budget for Exercise 3, with three required endpoint types (one Cassandra read, one Iceberg read, one federated read). Estimate which REQs are essential for that minimum vs. nice-to-have.</p>
+<p><strong>Action:</strong> keep 5–7 REQs in scope. Move the rest into the existing <code>## Out of scope</code> section, or create one. Tell the attendee which REQs you moved and why.</p>
+<h3 id="attendee-hasnt-given-you-enough-to-write-requirements">Attendee hasn't given you enough to write requirements<a class="headerlink" href="#attendee-hasnt-given-you-enough-to-write-requirements" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> the prompt was "write requirements for an e-commerce app." Not enough specificity.</p>
+<p><strong>Diagnostic:</strong> check whether you know who uses this, what they do, what success looks like.</p>
+<p><strong>Action:</strong> flip the relationship. Tell the attendee you're going to interview them. Ask one question at a time about persona, primary flow, and success criteria. After 5–7 questions, write the requirements.</p>
+<hr />
+<h2 id="exercise-2-spec-design-openapi">Exercise 2 — Spec (design + OpenAPI)<a class="headerlink" href="#exercise-2-spec-design-openapi" title="Permanent link">&para;</a></h2>
+<h3 id="hallucinated-tables-in-designmd">Hallucinated tables in design.md<a class="headerlink" href="#hallucinated-tables-in-designmd" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> <code>spec/design.md</code> references tables not present in the workshop's loaded schemas.</p>
+<p><strong>Diagnostic:</strong> re-read <code>SCHEMAS.md</code> and the two DDL files for the attendee's domain. Extract every table name from <code>design.md</code>. Compare.</p>
+<p><strong>Action:</strong> for each invented name, find the closest real table in the schema and substitute. If the design references a concept the real schema doesn't support, tell the attendee — don't fabricate a workaround. Update <code>design.md</code> in place.</p>
+<h3 id="no-actual-federated-query">No actual federated query<a class="headerlink" href="#no-actual-federated-query" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> the design has separate Cassandra endpoints and separate Iceberg endpoints but no endpoint that joins them in a single Presto query.</p>
+<p><strong>Diagnostic:</strong> grep <code>api/openapi.yaml</code> and <code>design.md</code> for explicit mentions of joining <code>cassandra_catalog.&lt;domain&gt;.X</code> to <code>iceberg_data.&lt;domain&gt;.Y</code>. If absent, federation is missing.</p>
+<p><strong>Action:</strong> add the missing federated endpoint. Write the actual SQL in <code>design.md</code> — it should reference both <code>cassandra_catalog</code> and <code>iceberg_data</code> schemas in the same FROM/JOIN clause. The federated query is the point of the workshop.</p>
+<h3 id="missing-req-coverage">Missing REQ coverage<a class="headerlink" href="#missing-req-coverage" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> some REQ-IDs are not covered by any endpoint in <code>openapi.yaml</code>.</p>
+<p><strong>Diagnostic:</strong> list every REQ-ID in <code>requirements.md</code>. For each, find covering endpoints. Flag uncovered REQs.</p>
+<p><strong>Action:</strong> for each uncovered REQ, either add a covering endpoint OR move the REQ to out-of-scope (with a one-sentence reason). Update both files. Don't silently drop REQs.</p>
+<h3 id="openapi-without-examples">OpenAPI without examples<a class="headerlink" href="#openapi-without-examples" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> response schemas in <code>openapi.yaml</code> have no <code>examples:</code> blocks.</p>
+<p><strong>Diagnostic:</strong> grep <code>openapi.yaml</code> for <code>examples:</code>.</p>
+<p><strong>Action:</strong> for every response schema, add an <code>examples:</code> block with realistic data — actual numbers, dates, IDs that match what the schemas in <code>SCHEMAS.md</code> describe. These become test fixtures in Exercise 3.</p>
+<h3 id="attendee-wants-to-switch-stacks-mid-design">Attendee wants to switch stacks mid-design<a class="headerlink" href="#attendee-wants-to-switch-stacks-mid-design" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> "I picked language X but I don't know it; can we switch?"</p>
+<p><strong>Diagnostic:</strong> confirm whether they want to switch because the original choice is genuinely blocking them, or because they're nervous about an unfamiliar language.</p>
+<p><strong>Action:</strong> if they're just nervous, push back gently — the workshop's pitch is that they don't need to read the code, they steer the loop. Suggest one cycle in the original stack first. If they insist, switch the stack note in <code>design.md</code> and adjust any sketched code or library references. Don't restart the design from scratch.</p>
+<hr />
+<h2 id="exercise-3-tasks-build">Exercise 3 — Tasks + build<a class="headerlink" href="#exercise-3-tasks-build" title="Permanent link">&para;</a></h2>
+<h3 id="connection-errors-cassandra-presto-watsonxdata">Connection errors (Cassandra / Presto / watsonx.data)<a class="headerlink" href="#connection-errors-cassandra-presto-watsonxdata" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> "Connection refused", SSL / cert errors, "host not found", wrong port.</p>
+<p><strong>Diagnostic:</strong> check the connection-details section of <code>SCHEMAS.md</code>. Common mistakes:
+- Code uses <code>host.containers.internal:9042</code> from the host machine — should be <code>localhost:9042</code>.
+- Presto client is verifying the self-signed certificate — needs to disable verification.
+- Wrong port: Presto is <code>8443</code>, Cassandra is <code>9042</code>, watsonx.data REST is <code>9443</code>.</p>
+<p><strong>Action:</strong> locate the connection setup in the relevant client / config file. Update host, port, and TLS settings to match SCHEMAS.md. Re-run the relevant test.</p>
+<h3 id="test-failure-followed-by-temptation-to-weaken-the-test">Test failure followed by temptation to weaken the test<a class="headerlink" href="#test-failure-followed-by-temptation-to-weaken-the-test" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> test fails; first instinct is to change the assertion to match the implementation.</p>
+<p><strong>Diagnostic:</strong> read what <code>openapi.yaml</code> says the response shape should be. Compare to what the implementation returns. Compare to what the test asserts.</p>
+<p><strong>Action:</strong> if test matches the spec, the implementation is wrong — fix the implementation. If you genuinely believe the spec is wrong, update <code>openapi.yaml</code> first, explain why to the attendee, then update both implementation and test. Never silently weaken assertions.</p>
+<h3 id="federated-query-times-out">Federated query times out<a class="headerlink" href="#federated-query-times-out" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> the Presto query joining Cassandra and Iceberg hangs or returns no rows.</p>
+<p><strong>Diagnostic:</strong> read the SQL. Check whether it filters on partition columns of the Iceberg side (look at the <code>PARTITIONED BY</code> clause in the relevant <code>iceberg_schema.sql</code> — typically <code>year</code> and <code>month</code>). Check for accidental cross joins (a JOIN missing an ON clause).</p>
+<p><strong>Action:</strong> add a partition filter and a proper join condition. Re-run.</p>
+<h3 id="backend-runs-but-ui-shows-no-data">Backend runs but UI shows no data<a class="headerlink" href="#backend-runs-but-ui-shows-no-data" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> UI loads, fetches show errors or empty responses.</p>
+<p><strong>Diagnostic:</strong> look at the browser network tab output the attendee pasted. Common causes: CORS misconfigured on the backend, frontend hitting wrong URL, backend returning 500 with a swallowed error.</p>
+<p><strong>Action:</strong> fix CORS config / fetch URL / unhandled exception. Tell the attendee what broke and what you changed.</p>
+<h3 id="youre-stuck-in-a-loop">You're stuck in a loop<a class="headerlink" href="#youre-stuck-in-a-loop" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> you've made the same fix two or three times and the same error returns. You've lost the plot.</p>
+<p><strong>Diagnostic:</strong> stop editing. Re-read three files cold: <code>spec/requirements.md</code>, <code>api/openapi.yaml</code>, and the implementation file in question.</p>
+<p><strong>Action:</strong> before any more code changes, write to the attendee in plain English: what does the spec say should happen, what does the code actually do, and where's the gap. Wait for them to confirm the diagnosis before resuming edits.</p>
+<h3 id="attendee-is-running-out-of-time">Attendee is running out of time<a class="headerlink" href="#attendee-is-running-out-of-time" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> less than 15 minutes left and the app isn't working end-to-end.</p>
+<p><strong>Diagnostic:</strong> identify which endpoints work (if any) and which are broken.</p>
+<p><strong>Action:</strong> triage. Get one endpoint — pick the simplest, usually the Cassandra read — working end-to-end through the UI. Skip the rest. Tell the attendee you're cutting scope and what's still on the table for Hour 4. A working app with one endpoint demos better than a half-working app with three.</p>
+<hr />
+<h2 id="hour-4-expansion-stuck-points">Hour 4 — expansion stuck points<a class="headerlink" href="#hour-4-expansion-stuck-points" title="Permanent link">&para;</a></h2>
+<h3 id="adding-a-new-req-but-the-propagation-skipped-a-file">Adding a new REQ but the propagation skipped a file<a class="headerlink" href="#adding-a-new-req-but-the-propagation-skipped-a-file" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> the attendee asked you to add a new REQ end-to-end. You added the endpoint and code but missed <code>requirements.md</code> or <code>todo.md</code> or the test.</p>
+<p><strong>Diagnostic:</strong> the propagation chain is <code>requirements.md</code> → <code>openapi.yaml</code> → <code>todo.md</code> → code → test → UI. Verify each file changed.</p>
+<p><strong>Action:</strong> complete the chain. Don't take shortcuts — the demo of Hour 4 is the propagation itself.</p>
+<h3 id="iceberg-time-travel-returns-nothing">Iceberg time-travel returns nothing<a class="headerlink" href="#iceberg-time-travel-returns-nothing" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> time-travel query returns empty results or "snapshot not found."</p>
+<p><strong>Diagnostic:</strong> check available snapshots: <code>SELECT snapshot_id, committed_at FROM &lt;catalog&gt;.&lt;schema&gt;.&lt;table&gt;$snapshots ORDER BY committed_at</code>. The workshop's data may have only one snapshot (the initial load), in which case time travel against "yesterday" won't show anything different.</p>
+<p><strong>Action:</strong> if only one snapshot exists, generate a second one by inserting or updating a row, then re-run the time-travel query against the earlier snapshot. Tell the attendee what you did so they understand the demo.</p>
+<h3 id="schema-evolution-existing-query">Schema evolution + existing query<a class="headerlink" href="#schema-evolution-existing-query" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> added a column to an Iceberg table; existing queries fail or new queries don't see the column.</p>
+<p><strong>Diagnostic:</strong> confirm the <code>ALTER TABLE ... ADD COLUMN</code> ran successfully (check via <code>DESCRIBE</code>). Existing queries should continue working — they don't reference the new column. New queries must explicitly select the new column or use <code>SELECT *</code>.</p>
+<p><strong>Action:</strong> if existing queries broke, the column add was wrong (e.g., the column type conflicts). Roll back via <code>ALTER TABLE ... DROP COLUMN</code> and try again with a compatible type.</p>
+<hr />
+<h2 id="nothing-matches">Nothing matches<a class="headerlink" href="#nothing-matches" title="Permanent link">&para;</a></h2>
+<p>If the symptom doesn't match any section above:</p>
+<ol>
+<li>Tell the attendee, in plain English: "I read getting-unstuck.md and didn't find a matching pattern. Here's what I see: [the symptom]. Here's what I think is happening: [hypothesis]. I want to try [approach] — can you confirm?"</li>
+<li>Wait for the attendee to confirm before making changes.</li>
+<li>If the attendee gives you the go-ahead, attempt the fix and report back.</li>
+<li>If the same approach fails twice, tell the attendee to ask the instructor — this is the genuinely-novel category.</li>
+</ol>
+<hr />
+<h2 id="things-you-should-not-do">Things you should not do<a class="headerlink" href="#things-you-should-not-do" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Edit files the attendee did not ask you to touch.</li>
+<li>Apologize at length. One sentence is enough; act, don't grovel.</li>
+<li>Lecture the attendee about best practices unsolicited.</li>
+<li>Silently weaken tests or hide errors to "make it work."</li>
+<li>Invent table names, endpoint shapes, or schema fields not present in the workshop's actual data.</li>
+<li>Suggest containerization, deployment, CI/CD, or observability — those are out of scope for this workshop.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback! Help us improve by opening an issue.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 - Built with spec-coding methodology
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/dwakeman/spec-coding-iot-app" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.path", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

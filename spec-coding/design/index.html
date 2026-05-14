@@ -1,0 +1,3377 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Full-stack IoT device monitoring application built with spec-coding methodology using IBM watsonx.data">
+      
+      
+        <meta name="author" content="dwakeman">
+      
+      
+        <link rel="canonical" href="https://dwakeman.github.io/spec-coding-iot-app/spec-coding/design/">
+      
+      
+        <link rel="prev" href="../requirements/">
+      
+      
+        <link rel="next" href="../sprint-planning/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Design - Sensor Health Dashboard</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sensor-health-dashboard-design" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Sensor Health Dashboard" class="md-header__button md-logo" aria-label="Sensor Health Dashboard" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Sensor Health Dashboard
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Design
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/dwakeman/spec-coding-iot-app" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dwakeman/spec-coding-iot-app
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/overview/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../introduction/" class="md-tabs__link">
+          
+  
+  
+  Spec-Coding Methodology
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../architecture/overview/" class="md-tabs__link">
+          
+  
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../user-guide/dashboard/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api/overview/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../development/setup/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../operations/demo-readiness/" class="md-tabs__link">
+          
+  
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/requirements-traceability/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Sensor Health Dashboard" class="md-nav__button md-logo" aria-label="Sensor Health Dashboard" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Sensor Health Dashboard
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dwakeman/spec-coding-iot-app" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dwakeman/spec-coding-iot-app
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quick-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spec-Coding Methodology
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Spec-Coding Methodology
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requirements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-design-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Design Scope
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Design Scope">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#in-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In Scope
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#out-of-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of Scope
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-actual-source-tables-and-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Actual Source Tables and Usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#31-cassandra-iotdevice_state_current" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Cassandra: iot.device_state_current
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#32-cassandra-iotreadings_hot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Cassandra: iot.readings_hot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#33-cassandra-iotalerts_open" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Cassandra: iot.alerts_open
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#34-iceberg-iceberg_dataiothourly_aggregates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Iceberg: iceberg_data.iot.hourly_aggregates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Architecture Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#41-logical-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Logical Components
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1 Logical Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frontend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backend-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Sources
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#42-recommended-runtime-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Recommended Runtime Pattern
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-core-data-access-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Core Data Access Patterns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#51-fleet-dashboard-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Fleet Dashboard List
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#52-device-detail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Device Detail
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#53-device-search-by-site-and-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Device Search by Site and Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#54-baseline-retrieval-by-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Baseline Retrieval by Device
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#55-recent-reading-retrieval-by-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Recent Reading Retrieval by Device
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-anomaly-detection-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Anomaly Detection Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#61-rule-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Rule Set
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#62-device-level-rollup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Device-Level Rollup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#63-missing-data-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Missing Data Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-api-surface-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. API Surface Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#71-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Endpoints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#72-endpoint-to-requirement-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Endpoint-to-Requirement Mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-backend-technical-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Backend Technical Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#81-service-responsibilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Service Responsibilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#82-data-access-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Data Access Layer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#83-query-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Query Constraints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#84-error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 Error Handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#85-performance-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 Performance Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#86-observability-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.6 Observability Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#87-configuration-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.7 Configuration Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-frontend-technical-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Frontend Technical Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#91-application-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Application Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#92-data-fetching-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Data Fetching Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#93-ux-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 UX Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#94-rendering-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 Rendering Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#95-frontend-error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 Frontend Error Handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-data-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Data Contracts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#101-device-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 Device Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#102-metric-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 Metric Baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#103-device-metric-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 Device Metric Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-example-query-designs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Example Query Designs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#111-cassandra-device-lookup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 Cassandra Device Lookup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#112-cassandra-last-hour-readings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.2 Cassandra Last-Hour Readings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#113-cassandra-alerts-by-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.3 Cassandra Alerts by Device
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#114-iceberg-7-day-baseline-by-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.4 Iceberg 7-Day Baseline by Device
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-delivery-artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Delivery Artifacts
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sprint-planning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint Planning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/data-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/api-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/data-access-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Access Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/federated-query-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Federated Query Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/device-details/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device Details
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/anomaly-detection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anomaly Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/filtering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Filtering & Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/endpoints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Endpoints
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/error-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error Handling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations/demo-readiness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Demo Readiness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations/troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations/windows-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations/performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/requirements-traceability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requirements Traceability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/project-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Summary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/installation-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation Summary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/final-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Final Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../introduction/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Spec-Coding Methodology
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="sensor-health-dashboard-design">Sensor Health Dashboard Design<a class="headerlink" href="#sensor-health-dashboard-design" title="Permanent link">&para;</a></h1>
+<h2 id="1-purpose">1. Purpose<a class="headerlink" href="#1-purpose" title="Permanent link">&para;</a></h2>
+<p>This document defines the technical design for the IoT Sensor Health Dashboard described in <code>requirements.md</code>. The design is constrained to the actual workshop data model and to a mixed access pattern: the application reads hot operational data directly from Cassandra and reads Iceberg analytical data through the Presto engine in watsonx.data. Federated Cassandra/Iceberg analytical queries may also be executed through Presto when beneficial.</p>
+<p>Logical source tables used by the application:
+- Cassandra <code>iot.device_state_current</code> via direct Cassandra access
+- Cassandra <code>iot.readings_hot</code> via direct Cassandra access
+- Cassandra <code>iot.alerts_open</code> via direct Cassandra access
+- Iceberg <code>iceberg_data.iot.hourly_aggregates</code> via Presto</p>
+<p>Optional future-use tables are acknowledged but not part of the starter implementation.</p>
+<p>This design focuses on read-only operational workflows that combine hot operational data with cold analytical baseline data using direct Cassandra access for hot reads and Presto for analytics.</p>
+<h2 id="2-design-scope">2. Design Scope<a class="headerlink" href="#2-design-scope" title="Permanent link">&para;</a></h2>
+<h3 id="in-scope">In Scope<a class="headerlink" href="#in-scope" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fleet dashboard of current device health</li>
+<li>Device detail view</li>
+<li>Last-hour readings per device</li>
+<li>7-day baseline comparison by metric</li>
+<li>Anomaly flagging</li>
+<li>Open alert context</li>
+<li>Filtering by site, status, and anomaly state</li>
+<li>Read-only backend APIs</li>
+<li>Frontend and backend technical requirements</li>
+</ul>
+<h3 id="out-of-scope">Out of Scope<a class="headerlink" href="#out-of-scope" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Alert acknowledgement updates</li>
+<li>Device command execution</li>
+<li>Predictive maintenance</li>
+<li>Weather-based correlation workflows</li>
+<li>Firmware history views</li>
+<li>Maintenance window workflows</li>
+<li>Authentication and authorization implementation</li>
+<li>Background write-back jobs to source systems</li>
+</ul>
+<h2 id="3-actual-source-tables-and-usage">3. Actual Source Tables and Usage<a class="headerlink" href="#3-actual-source-tables-and-usage" title="Permanent link">&para;</a></h2>
+<h2 id="31-cassandra-iotdevice_state_current">3.1 Cassandra: <code>iot.device_state_current</code><a class="headerlink" href="#31-cassandra-iotdevice_state_current" title="Permanent link">&para;</a></h2>
+<p>Purpose in app:
+- Primary fleet inventory table
+- Current device status and health context
+- Base dataset for dashboard list and device detail header</p>
+<p>Relevant columns:
+- <code>device_id</code>
+- <code>device_type</code>
+- <code>device_class</code>
+- <code>model</code>
+- <code>firmware_version</code>
+- <code>status</code>
+- <code>last_heartbeat</code>
+- <code>last_reading_value</code>
+- <code>battery_percent</code>
+- <code>signal_strength_dbm</code>
+- <code>site_id</code>
+- <code>zone</code>
+- <code>installed_at</code>
+- <code>updated_at</code></p>
+<p>Access characteristics:
+- Accessed directly from Cassandra by the application
+- Primary key lookup semantics remain based on <code>device_id</code>
+- Secondary-index-backed filtering semantics remain based on <code>site_id</code>
+- Secondary-index-backed filtering semantics remain based on <code>status</code>
+- Fleet scans may still be expensive against Cassandra; for starter scope, fleet listing is acceptable for moderate sample data size, but production design would add purpose-built query tables or query-serving projections</p>
+<h2 id="32-cassandra-iotreadings_hot">3.2 Cassandra: <code>iot.readings_hot</code><a class="headerlink" href="#32-cassandra-iotreadings_hot" title="Permanent link">&para;</a></h2>
+<p>Purpose in app:
+- Last-hour sensor readings for a selected device
+- Recent metric samples used in anomaly comparison</p>
+<p>Relevant columns:
+- <code>device_id</code>
+- <code>reading_bucket_hour</code>
+- <code>reading_timestamp</code>
+- <code>metric_name</code>
+- <code>metric_value</code>
+- <code>unit</code>
+- <code>quality_code</code></p>
+<p>Access characteristics:
+- Accessed directly from Cassandra by the application
+- Partition key is <code>(device_id, reading_bucket_hour)</code>
+- Efficient queries must constrain <code>device_id</code> plus one or more hour buckets
+- Since the dashboard needs the last 60 minutes, the backend should query:
+  - current hour bucket
+  - previous hour bucket
+- Results are merged in application code and filtered to the last 60 minutes</p>
+<h2 id="33-cassandra-iotalerts_open">3.3 Cassandra: <code>iot.alerts_open</code><a class="headerlink" href="#33-cassandra-iotalerts_open" title="Permanent link">&para;</a></h2>
+<p>Purpose in app:
+- Alert context for device detail
+- Open alert indicators in dashboard list</p>
+<p>Relevant columns:
+- <code>device_id</code>
+- <code>alert_id</code>
+- <code>raised_at</code>
+- <code>severity</code>
+- <code>alert_type</code>
+- <code>metric_name</code>
+- <code>metric_value</code>
+- <code>threshold_value</code>
+- <code>site_id</code>
+- <code>acknowledged</code></p>
+<p>Access characteristics:
+- Accessed directly from Cassandra by the application
+- Partitioned by <code>device_id</code>
+- Efficient reads remain device-oriented
+- Fleet-wide alert counting is not optimized by schema, so starter implementation should enrich dashboard rows only for currently returned devices rather than attempt unrestricted alert scans</p>
+<h2 id="34-iceberg-iceberg_dataiothourly_aggregates">3.4 Iceberg: <code>iceberg_data.iot.hourly_aggregates</code><a class="headerlink" href="#34-iceberg-iceberg_dataiothourly_aggregates" title="Permanent link">&para;</a></h2>
+<p>Purpose in app:
+- 7-day baseline for device metric comparison
+- Input to anomaly calculations
+- Device detail baseline panels
+- Dashboard anomaly summary by device</p>
+<p>Relevant columns:
+- <code>device_id</code>
+- <code>site_id</code>
+- <code>device_class</code>
+- <code>metric_name</code>
+- <code>hour_start</code>
+- <code>sample_count</code>
+- <code>min_value</code>
+- <code>max_value</code>
+- <code>avg_value</code>
+- <code>p95_value</code>
+- <code>stddev_value</code></p>
+<p>Access characteristics:
+- Queried through Presto / watsonx.data
+- Efficient when constrained by:
+  - <code>device_id</code>
+  - time window (<code>hour_start &gt;= current_timestamp - interval '7' day</code>)
+- Because <code>device_id</code> is stored as <code>VARCHAR</code> in Iceberg but as UUID in Cassandra, API and backend must normalize the device ID string during joins and comparisons</p>
+<h2 id="4-architecture-overview">4. Architecture Overview<a class="headerlink" href="#4-architecture-overview" title="Permanent link">&para;</a></h2>
+<h2 id="41-logical-components">4.1 Logical Components<a class="headerlink" href="#41-logical-components" title="Permanent link">&para;</a></h2>
+<h3 id="frontend">Frontend<a class="headerlink" href="#frontend" title="Permanent link">&para;</a></h3>
+<p>A single-page dashboard application responsible for:
+- fleet list rendering
+- filter controls
+- anomaly badges
+- device detail view
+- chart or table rendering for last-hour readings and baseline stats
+- error and empty-state messaging</p>
+<h3 id="backend-api">Backend API<a class="headerlink" href="#backend-api" title="Permanent link">&para;</a></h3>
+<p>A read-only service responsible for:
+- querying Cassandra directly for current state and recent readings
+- querying Cassandra directly for open alerts
+- querying Presto for Iceberg-backed baseline data
+- optionally issuing federated SQL through Presto that joins Cassandra and Iceberg in a single query when beneficial
+- computing anomaly summaries
+- shaping API responses for frontend use
+- applying pagination, sorting, and filtering rules</p>
+<h3 id="data-sources">Data Sources<a class="headerlink" href="#data-sources" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Cassandra as the application-facing store for hot operational data</li>
+<li>Presto / watsonx.data for Iceberg analytical baseline data</li>
+<li>Presto federation for optional Cassandra/Iceberg analytical joins</li>
+</ul>
+<h2 id="42-recommended-runtime-pattern">4.2 Recommended Runtime Pattern<a class="headerlink" href="#42-recommended-runtime-pattern" title="Permanent link">&para;</a></h2>
+<p>For starter simplicity:
+- backend queries Cassandra directly for hot operational tables
+- backend queries Presto / watsonx.data for Iceberg analytical tables
+- backend may issue a federated Presto query when it improves efficiency or simplifies analytical response shaping
+- backend joins datasets in memory by <code>device_id</code> and <code>metric_name</code> when using multiple statements
+- frontend never calls Cassandra or Presto directly</p>
+<p>Rationale:
+- avoids exposing data-source credentials to browser
+- preserves low-latency direct access for hot operational reads
+- centralizes anomaly logic
+- simplifies API contract
+- allows analytics to use Iceberg or federated hot+cold SQL when appropriate</p>
+<h2 id="5-core-data-access-patterns">5. Core Data Access Patterns<a class="headerlink" href="#5-core-data-access-patterns" title="Permanent link">&para;</a></h2>
+<h2 id="51-fleet-dashboard-list">5.1 Fleet Dashboard List<a class="headerlink" href="#51-fleet-dashboard-list" title="Permanent link">&para;</a></h2>
+<p>Primary requirement coverage:
+- REQ-001
+- REQ-005
+- REQ-006
+- REQ-008
+- REQ-009
+- REQ-010</p>
+<p>Flow:
+1. Query <code>iot.device_state_current</code> directly in Cassandra for devices matching requested filters.
+2. For each returned device, optionally query <code>iot.alerts_open</code> directly in Cassandra by <code>device_id</code>.
+3. For each returned device, query 7-day baseline summary from <code>iceberg_data.iot.hourly_aggregates</code> through Presto.
+4. If anomaly evaluation is requested, query recent readings from <code>iot.readings_hot</code> directly in Cassandra for current and previous hour buckets.
+5. Compute per-device anomaly summary from recent readings vs baseline.
+6. Return normalized dashboard rows.</p>
+<p>Notes:
+- To control backend fan-out, the dashboard endpoint should be paginated.
+- Baseline and anomaly enrichment should be limited to the page of devices returned.
+- Alert enrichment should be per-page devices only.</p>
+<h2 id="52-device-detail">5.2 Device Detail<a class="headerlink" href="#52-device-detail" title="Permanent link">&para;</a></h2>
+<p>Primary requirement coverage:
+- REQ-002
+- REQ-003
+- REQ-004
+- REQ-005
+- REQ-007
+- REQ-008
+- REQ-009</p>
+<p>Flow:
+1. Load <code>iot.device_state_current</code> directly from Cassandra by <code>device_id</code>.
+2. Load <code>iot.readings_hot</code> directly from Cassandra using two bucket-hour queries.
+3. Load <code>iot.alerts_open</code> directly from Cassandra by <code>device_id</code>.
+4. Load 7-day baseline rows from <code>iceberg_data.iot.hourly_aggregates</code> through Presto by <code>device_id</code>.
+5. Group readings by <code>metric_name</code>.
+6. Compute anomaly result per metric.
+7. Return a single detail payload.</p>
+<h2 id="53-device-search-by-site-and-status">5.3 Device Search by Site and Status<a class="headerlink" href="#53-device-search-by-site-and-status" title="Permanent link">&para;</a></h2>
+<p>Primary requirement coverage:
+- REQ-001
+- REQ-006</p>
+<p>Flow:
+1. If <code>site_id</code> is provided, query <code>iot.device_state_current</code> directly in Cassandra using the <code>site_id</code> index.
+2. If <code>status</code> is provided, query <code>iot.device_state_current</code> directly in Cassandra using the <code>status</code> index.
+3. If both are provided, query one filtered set and post-filter in the backend as needed.
+4. Return paginated dashboard rows.</p>
+<p>Design note:
+Because direct Cassandra access is used for hot data, the practical filtering limits reflect the actual Cassandra schema. This is acceptable for starter data but would need denormalized query tables or serving projections in production.</p>
+<h2 id="54-baseline-retrieval-by-device">5.4 Baseline Retrieval by Device<a class="headerlink" href="#54-baseline-retrieval-by-device" title="Permanent link">&para;</a></h2>
+<p>Primary requirement coverage:
+- REQ-003
+- REQ-004
+- REQ-009</p>
+<p>Presto query shape:
+- Filter <code>hour_start &gt;= current_timestamp - interval '7' day</code>
+- Filter <code>device_id = :deviceId</code>
+- Group by <code>device_id, metric_name</code>
+- Aggregate:
+  - average of <code>avg_value</code>
+  - max of <code>p95_value</code>
+  - min of <code>min_value</code>
+  - max of <code>max_value</code>
+  - average of <code>stddev_value</code>
+  - sum of <code>sample_count</code></p>
+<p>Returned baseline per metric:
+- baselineAvg
+- baselineP95
+- baselineMin
+- baselineMax
+- baselineStddev
+- sampleCount
+- baselineWindowHoursCovered</p>
+<h2 id="55-recent-reading-retrieval-by-device">5.5 Recent Reading Retrieval by Device<a class="headerlink" href="#55-recent-reading-retrieval-by-device" title="Permanent link">&para;</a></h2>
+<p>Primary requirement coverage:
+- REQ-002
+- REQ-004
+- REQ-008</p>
+<p>Cassandra query shape:
+- Query current hour bucket by <code>device_id</code> and rounded current hour
+- Query previous hour bucket by <code>device_id</code> and rounded previous hour
+- Merge results
+- Filter to timestamps in last 60 minutes
+- Group by <code>metric_name</code></p>
+<p>This design aligns directly with the partition key of <code>readings_hot</code>.</p>
+<h2 id="6-anomaly-detection-design">6. Anomaly Detection Design<a class="headerlink" href="#6-anomaly-detection-design" title="Permanent link">&para;</a></h2>
+<h2 id="61-rule-set">6.1 Rule Set<a class="headerlink" href="#61-rule-set" title="Permanent link">&para;</a></h2>
+<p>Starter rule set for REQ-004:</p>
+<p>A metric is flagged <code>anomalous</code> when all of the following are true:
+1. At least one good or suspect recent reading exists for the metric in the last hour.
+2. A 7-day baseline exists from <code>hourly_aggregates</code>.
+3. The latest recent reading satisfies either:
+   - <code>metric_value &gt; baselineP95</code>
+   - or <code>abs(metric_value - baselineAvg) &gt; max(2 * baselineStddev, baselineAvg * 0.10)</code></p>
+<p>If <code>quality_code = bad</code>, the reading is excluded from anomaly evaluation but may still be shown in the UI.</p>
+<p>If baseline inputs are missing, anomaly status is <code>unknown</code>, not <code>normal</code>.</p>
+<h2 id="62-device-level-rollup">6.2 Device-Level Rollup<a class="headerlink" href="#62-device-level-rollup" title="Permanent link">&para;</a></h2>
+<p>A device is flagged <code>anomalous</code> when:
+- any metric is anomalous, or
+- an open alert of type <code>anomaly</code> exists</p>
+<p>Device severity rollup:
+- <code>critical</code> if any critical alert exists
+- <code>high</code> if any anomalous metric exists and no critical alert exists
+- <code>medium</code> if device status is <code>degraded</code>
+- <code>low</code> if battery is below configured low-battery threshold
+- <code>normal</code> otherwise</p>
+<h2 id="63-missing-data-rules">6.3 Missing Data Rules<a class="headerlink" href="#63-missing-data-rules" title="Permanent link">&para;</a></h2>
+<ul>
+<li>No recent readings in last hour: device <code>dataFreshness = stale</code></li>
+<li>No baseline rows for metric: <code>anomalyStatus = unknown</code></li>
+<li>Only bad-quality readings: <code>anomalyStatus = unknown</code></li>
+<li>Missing alerts: return empty array, not null</li>
+</ul>
+<h2 id="7-api-surface-design">7. API Surface Design<a class="headerlink" href="#7-api-surface-design" title="Permanent link">&para;</a></h2>
+<h2 id="71-endpoints">7.1 Endpoints<a class="headerlink" href="#71-endpoints" title="Permanent link">&para;</a></h2>
+<p>The backend should expose the following endpoints:</p>
+<ol>
+<li><code>GET /api/v1/devices</code></li>
+<li>
+<p>dashboard list with filtering, sorting, pagination, and optional enrichment</p>
+</li>
+<li>
+<p><code>GET /api/v1/devices/{deviceId}</code></p>
+</li>
+<li>
+<p>current device state plus summary flags</p>
+</li>
+<li>
+<p><code>GET /api/v1/devices/{deviceId}/readings</code></p>
+</li>
+<li>
+<p>last-hour readings by device</p>
+</li>
+<li>
+<p><code>GET /api/v1/devices/{deviceId}/baseline</code></p>
+</li>
+<li>
+<p>7-day baseline by metric</p>
+</li>
+<li>
+<p><code>GET /api/v1/devices/{deviceId}/alerts</code></p>
+</li>
+<li>
+<p>open alerts for the device</p>
+</li>
+<li>
+<p><code>GET /api/v1/devices/{deviceId}/health</code></p>
+</li>
+<li>
+<p>composite detail endpoint returning state, readings, alerts, baseline, and anomaly summary</p>
+</li>
+<li>
+<p><code>GET /api/v1/sites</code></p>
+</li>
+<li>list available site IDs derived from current device state for filter population</li>
+</ol>
+<h2 id="72-endpoint-to-requirement-mapping">7.2 Endpoint-to-Requirement Mapping<a class="headerlink" href="#72-endpoint-to-requirement-mapping" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Supported REQ IDs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /api/v1/devices</code></td>
+<td>REQ-001, REQ-005, REQ-006, REQ-008, REQ-009, REQ-010, REQ-011</td>
+</tr>
+<tr>
+<td><code>GET /api/v1/devices/{deviceId}</code></td>
+<td>REQ-001, REQ-007, REQ-008</td>
+</tr>
+<tr>
+<td><code>GET /api/v1/devices/{deviceId}/readings</code></td>
+<td>REQ-002, REQ-008</td>
+</tr>
+<tr>
+<td><code>GET /api/v1/devices/{deviceId}/baseline</code></td>
+<td>REQ-003, REQ-008, REQ-009</td>
+</tr>
+<tr>
+<td><code>GET /api/v1/devices/{deviceId}/alerts</code></td>
+<td>REQ-005, REQ-007</td>
+</tr>
+<tr>
+<td><code>GET /api/v1/devices/{deviceId}/health</code></td>
+<td>REQ-002, REQ-003, REQ-004, REQ-005, REQ-007, REQ-008, REQ-009, REQ-010</td>
+</tr>
+<tr>
+<td><code>GET /api/v1/sites</code></td>
+<td>REQ-006, REQ-010</td>
+</tr>
+</tbody>
+</table>
+<h2 id="8-backend-technical-requirements">8. Backend Technical Requirements<a class="headerlink" href="#8-backend-technical-requirements" title="Permanent link">&para;</a></h2>
+<h2 id="81-service-responsibilities">8.1 Service Responsibilities<a class="headerlink" href="#81-service-responsibilities" title="Permanent link">&para;</a></h2>
+<p>The backend shall:
+- expose a REST API
+- validate UUID path parameters
+- validate query parameters for pagination, filters, and sort fields
+- connect directly to Cassandra for hot operational reads
+- connect to Presto / watsonx.data for Iceberg analytical reads
+- support federated Presto analytics when joining Cassandra and Iceberg is beneficial
+- normalize numeric and timestamp values into JSON-safe representations
+- compute anomaly state in service code
+- return consistent error payloads</p>
+<h2 id="82-data-access-layer">8.2 Data Access Layer<a class="headerlink" href="#82-data-access-layer" title="Permanent link">&para;</a></h2>
+<p>The backend should implement source-appropriate repositories:
+- <code>DeviceStateRepository</code>
+- <code>ReadingsRepository</code>
+- <code>AlertsRepository</code>
+- <code>BaselineRepository</code></p>
+<p>A shared Cassandra client should access:
+- <code>iot.device_state_current</code>
+- <code>iot.readings_hot</code>
+- <code>iot.alerts_open</code></p>
+<p>A shared Presto client should execute SQL against:
+- <code>iceberg_data.iot.hourly_aggregates</code>
+- and, when needed for federated analytics, the Presto <code>cassandra</code> catalog</p>
+<p>Current implementation notes:
+- the backend authenticates to Presto using HTTP Basic authentication
+- credentials are provided through backend environment variables and are never exposed to the browser
+- local development may disable TLS certificate verification for the Presto endpoint through <code>PRESTO_TLS_REJECT_UNAUTHORIZED=false</code>
+- TLS verification bypass is for local/self-signed development only and must remain enabled in non-local environments</p>
+<p>A service layer should assemble:
+- <code>DashboardService</code>
+- <code>DeviceHealthService</code></p>
+<h2 id="83-query-constraints">8.3 Query Constraints<a class="headerlink" href="#83-query-constraints" title="Permanent link">&para;</a></h2>
+<p>Backend must respect actual schema constraints:
+- <code>readings_hot</code> requires bucket-aware reads by <code>device_id</code> and <code>reading_bucket_hour</code>
+- <code>alerts_open</code> is best accessed by device
+- <code>hourly_aggregates</code> should always be filtered by time window and device ID when serving detail endpoints
+- fleet-wide baseline computation should be limited to paginated dashboard subsets
+- federated Presto joins should be constrained to selective device subsets to avoid broad scans across the Cassandra source</p>
+<h2 id="84-error-handling">8.4 Error Handling<a class="headerlink" href="#84-error-handling" title="Permanent link">&para;</a></h2>
+<p>The backend shall return structured errors:
+- <code>400</code> invalid filter or malformed UUID
+- <code>404</code> device not found
+- <code>422</code> unsupported sort field or query combination
+- <code>502</code> upstream data-source query failure
+- <code>503</code> transient dependency unavailable</p>
+<h2 id="85-performance-requirements">8.5 Performance Requirements<a class="headerlink" href="#85-performance-requirements" title="Permanent link">&para;</a></h2>
+<p>Starter targets:
+- dashboard list response under 2 seconds for default page size on workshop dataset
+- device health detail response under 3 seconds with baseline enrichment
+- page size default 25, maximum 100
+- request timeout protection on Presto/Iceberg queries</p>
+<h2 id="86-observability-requirements">8.6 Observability Requirements<a class="headerlink" href="#86-observability-requirements" title="Permanent link">&para;</a></h2>
+<p>Backend should log:
+- request ID
+- endpoint
+- filter set
+- Cassandra query timing
+- Presto query timing
+- target source and table set
+- anomaly computation timing
+- upstream failure category</p>
+<h2 id="87-configuration-requirements">8.7 Configuration Requirements<a class="headerlink" href="#87-configuration-requirements" title="Permanent link">&para;</a></h2>
+<p>Backend configuration should include:
+- Cassandra host, port, username, password, keyspace
+- Presto base URL / endpoint
+- Presto user header value
+- Presto basic-auth username and password
+- Presto catalog names for federated analytics and Iceberg access
+- Presto TLS certificate verification toggle for local/self-signed development only
+- page-size defaults
+- low-battery threshold
+- anomaly threshold tuning values
+- request timeout values</p>
+<h2 id="9-frontend-technical-requirements">9. Frontend Technical Requirements<a class="headerlink" href="#9-frontend-technical-requirements" title="Permanent link">&para;</a></h2>
+<h2 id="91-application-structure">9.1 Application Structure<a class="headerlink" href="#91-application-structure" title="Permanent link">&para;</a></h2>
+<p>The frontend should implement:
+- dashboard page
+- filter toolbar
+- device table or card list
+- anomaly indicator components
+- device detail panel/page
+- alert list component
+- readings time-series or recent-readings table
+- baseline comparison summary component
+- empty-state and error-state components</p>
+<h2 id="92-data-fetching-requirements">9.2 Data Fetching Requirements<a class="headerlink" href="#92-data-fetching-requirements" title="Permanent link">&para;</a></h2>
+<p>Frontend should:
+- load <code>/api/v1/sites</code> at startup for filter values
+- load <code>/api/v1/devices</code> for dashboard page data
+- debounce search/filter changes if free-text search is added later
+- load <code>/api/v1/devices/{deviceId}/health</code> when a device is selected
+- support loading and error states independently for list and detail views</p>
+<h2 id="93-ux-requirements">9.3 UX Requirements<a class="headerlink" href="#93-ux-requirements" title="Permanent link">&para;</a></h2>
+<p>Frontend shall:
+- visually distinguish <code>online</code>, <code>offline</code>, <code>degraded</code>, and <code>maintenance</code>
+- visually distinguish anomaly status <code>anomalous</code>, <code>normal</code>, and <code>unknown</code>
+- show stale/no-data messaging when no readings are present
+- show baseline unavailable messaging when historical data is absent
+- preserve filter state while navigating between dashboard and device detail
+- support responsive layout for laptop-sized screens used in workshop demos</p>
+<h2 id="94-rendering-requirements">9.4 Rendering Requirements<a class="headerlink" href="#94-rendering-requirements" title="Permanent link">&para;</a></h2>
+<p>Frontend should display:
+- fleet list columns:
+  - device ID
+  - class
+  - model
+  - firmware version
+  - status
+  - site
+  - zone
+  - battery
+  - signal
+  - last heartbeat
+  - anomaly state
+  - open alert count
+- device detail sections:
+  - current state summary
+  - recent readings
+  - baseline by metric
+  - anomaly explanations
+  - open alerts</p>
+<h2 id="95-frontend-error-handling">9.5 Frontend Error Handling<a class="headerlink" href="#95-frontend-error-handling" title="Permanent link">&para;</a></h2>
+<p>Frontend shall handle:
+- invalid device route with not-found state
+- API dependency errors with retry affordance
+- empty datasets without broken UI
+- partial enrichment cases where state loads but baseline fails</p>
+<h2 id="10-data-contracts">10. Data Contracts<a class="headerlink" href="#10-data-contracts" title="Permanent link">&para;</a></h2>
+<h2 id="101-device-summary">10.1 Device Summary<a class="headerlink" href="#101-device-summary" title="Permanent link">&para;</a></h2>
+<p>A dashboard device row should contain:
+- deviceId
+- deviceType
+- deviceClass
+- model
+- firmwareVersion
+- status
+- lastHeartbeat
+- lastReadingValue
+- batteryPercent
+- signalStrengthDbm
+- siteId
+- zone
+- anomalyStatus
+- anomalyMetricCount
+- highestAlertSeverity
+- openAlertCount
+- dataFreshness</p>
+<h2 id="102-metric-baseline">10.2 Metric Baseline<a class="headerlink" href="#102-metric-baseline" title="Permanent link">&para;</a></h2>
+<p>A device metric baseline should contain:
+- metricName
+- baselineAvg
+- baselineP95
+- baselineMin
+- baselineMax
+- baselineStddev
+- sampleCount
+- baselineWindowDays</p>
+<h2 id="103-device-metric-health">10.3 Device Metric Health<a class="headerlink" href="#103-device-metric-health" title="Permanent link">&para;</a></h2>
+<p>A metric health object should contain:
+- metricName
+- latestReading
+- unit
+- qualityCode
+- recentReadingCount
+- anomalyStatus
+- anomalyReason
+- baseline</p>
+<h2 id="11-example-query-designs">11. Example Query Designs<a class="headerlink" href="#11-example-query-designs" title="Permanent link">&para;</a></h2>
+<h2 id="111-cassandra-device-lookup">11.1 Cassandra Device Lookup<a class="headerlink" href="#111-cassandra-device-lookup" title="Permanent link">&para;</a></h2>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">device_id</span><span class="p">,</span><span class="w"> </span><span class="n">device_type</span><span class="p">,</span><span class="w"> </span><span class="n">device_class</span><span class="p">,</span><span class="w"> </span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">firmware_version</span><span class="p">,</span><span class="w"> </span><span class="n">status</span><span class="p">,</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">       </span><span class="n">last_heartbeat</span><span class="p">,</span><span class="w"> </span><span class="n">last_reading_value</span><span class="p">,</span><span class="w"> </span><span class="n">battery_percent</span><span class="p">,</span><span class="w"> </span><span class="n">signal_strength_dbm</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">       </span><span class="n">site_id</span><span class="p">,</span><span class="w"> </span><span class="k">zone</span><span class="p">,</span><span class="w"> </span><span class="n">installed_at</span><span class="p">,</span><span class="w"> </span><span class="n">updated_at</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">iot</span><span class="p">.</span><span class="n">device_state_current</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">device_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">?</span><span class="p">;</span>
+</span></code></pre></div>
+<h2 id="112-cassandra-last-hour-readings">11.2 Cassandra Last-Hour Readings<a class="headerlink" href="#112-cassandra-last-hour-readings" title="Permanent link">&para;</a></h2>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">device_id</span><span class="p">,</span><span class="w"> </span><span class="n">reading_bucket_hour</span><span class="p">,</span><span class="w"> </span><span class="n">reading_timestamp</span><span class="p">,</span><span class="w"> </span><span class="n">metric_name</span><span class="p">,</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">       </span><span class="n">metric_value</span><span class="p">,</span><span class="w"> </span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="n">quality_code</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">iot</span><span class="p">.</span><span class="n">readings_hot</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">device_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">?</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">reading_bucket_hour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">?</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Executed twice:
+- once for current hour bucket
+- once for previous hour bucket</p>
+<h2 id="113-cassandra-alerts-by-device">11.3 Cassandra Alerts by Device<a class="headerlink" href="#113-cassandra-alerts-by-device" title="Permanent link">&para;</a></h2>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">device_id</span><span class="p">,</span><span class="w"> </span><span class="n">alert_id</span><span class="p">,</span><span class="w"> </span><span class="n">raised_at</span><span class="p">,</span><span class="w"> </span><span class="n">severity</span><span class="p">,</span><span class="w"> </span><span class="n">alert_type</span><span class="p">,</span><span class="w"> </span><span class="n">metric_name</span><span class="p">,</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">       </span><span class="n">metric_value</span><span class="p">,</span><span class="w"> </span><span class="n">threshold_value</span><span class="p">,</span><span class="w"> </span><span class="n">site_id</span><span class="p">,</span><span class="w"> </span><span class="n">acknowledged</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">iot</span><span class="p">.</span><span class="n">alerts_open</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">device_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">?</span><span class="p">;</span>
+</span></code></pre></div>
+<h2 id="114-iceberg-7-day-baseline-by-device">11.4 Iceberg 7-Day Baseline by Device<a class="headerlink" href="#114-iceberg-7-day-baseline-by-device" title="Permanent link">&para;</a></h2>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">SELECT</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="n">device_id</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="n">metric_name</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="k">AVG</span><span class="p">(</span><span class="n">avg_value</span><span class="p">)</span><span class="w">    </span><span class="k">AS</span><span class="w"> </span><span class="n">baseline_avg</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="k">MAX</span><span class="p">(</span><span class="n">p95_value</span><span class="p">)</span><span class="w">    </span><span class="k">AS</span><span class="w"> </span><span class="n">baseline_p95</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="k">MIN</span><span class="p">(</span><span class="n">min_value</span><span class="p">)</span><span class="w">    </span><span class="k">AS</span><span class="w"> </span><span class="n">baseline_min</span><span class="p">,</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="k">MAX</span><span class="p">(</span><span class="n">max_value</span><span class="p">)</span><span class="w">    </span><span class="k">AS</span><span class="w"> </span><span class="n">baseline_max</span><span class="p">,</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="k">AVG</span><span class="p">(</span><span class="n">stddev_value</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">baseline_stddev</span><span class="p">,</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="k">SUM</span><span class="p">(</span><span class="n">sample_count</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">sample_count</span><span class="p">,</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">          </span><span class="k">AS</span><span class="w"> </span><span class="n">baseline_window_hours_covered</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">FROM</span><span class="w"> </span><span class="n">iceberg_data</span><span class="p">.</span><span class="n">iot</span><span class="p">.</span><span class="n">hourly_aggregates</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">device_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">?</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">hour_start</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="k">current_timestamp</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;7&#39;</span><span class="w"> </span><span class="k">DAY</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">device_id</span><span class="p">,</span><span class="w"> </span><span class="n">metric_name</span><span class="p">;</span>
+</span></code></pre></div>
+<h2 id="12-delivery-artifacts">12. Delivery Artifacts<a class="headerlink" href="#12-delivery-artifacts" title="Permanent link">&para;</a></h2>
+<p>This design is paired with:
+- <code>requirements.md</code>
+- <code>openapi.yaml</code></p>
+<p>The API contract in <code>openapi.yaml</code> should remain aligned with the endpoint and payload shapes described here.</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback! Help us improve by opening an issue.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../requirements/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Requirements">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Requirements
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../sprint-planning/" class="md-footer__link md-footer__link--next" aria-label="Next: Sprint Planning">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Sprint Planning
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 - Built with spec-coding methodology
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/dwakeman/spec-coding-iot-app" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.path", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
