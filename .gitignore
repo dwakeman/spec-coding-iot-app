@@ -19,3 +19,4 @@ setup/sample-data/.venv/
 dist/
 
 **/node_modules
+key.enc
