@@ -10,6 +10,10 @@ A full-stack IoT device monitoring application built using **spec-coding** metho
 
 ## 🎯 What This Application Does
 
+
+_**Note: Full documentation for this application (including the methodology used to create it) can be found [here](https://dwakeman.github.io/spec-coding-iot-app).**_
+
+
 The Sensor Health Dashboard helps operations teams monitor IoT device fleets by:
 
 - **Real-time monitoring** of device status, battery levels, and signal strength
