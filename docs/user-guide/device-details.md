@@ -1,0 +1,4 @@
+# Device Details
+
+Coming soon.
+

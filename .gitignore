@@ -22,3 +22,7 @@ dist/
 key.enc
 
 .iceberg-load*
+
+# MkDocs build artifacts
+site/
+.cache/

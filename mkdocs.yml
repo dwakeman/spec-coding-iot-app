@@ -1,0 +1,183 @@
+site_name: Sensor Health Dashboard
+site_url: https://dwakeman.github.io/spec-coding-iot-app/
+site_description: Full-stack IoT device monitoring application built with spec-coding methodology using IBM watsonx.data
+site_author: dwakeman
+repo_url: https://github.com/dwakeman/spec-coding-iot-app
+repo_name: dwakeman/spec-coding-iot-app
+edit_uri: edit/main/docs/
+
+# Copyright
+copyright: Copyright &copy; 2026 - Built with spec-coding methodology
+
+# Theme Configuration
+theme:
+  name: material
+  language: en
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - navigation.footer
+    - toc.follow
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+    view: material/eye
+
+# Extensions
+markdown_extensions:
+  # Python Markdown
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+  
+  # Python Markdown Extensions
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# Plugins
+plugins:
+  - search:
+      separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
+  - tags
+
+# Extra
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/dwakeman/spec-coding-iot-app
+  analytics:
+    feedback:
+      title: Was this page helpful?
+      ratings:
+        - icon: material/emoticon-happy-outline
+          name: This page was helpful
+          data: 1
+          note: >-
+            Thanks for your feedback!
+        - icon: material/emoticon-sad-outline
+          name: This page could be improved
+          data: 0
+          note: >-
+            Thanks for your feedback! Help us improve by opening an issue.
+  status:
+    new: Recently added
+    deprecated: Deprecated
+
+# Navigation
+nav:
+  - Home: index.md
+  
+  - Getting Started:
+    - Overview: getting-started/overview.md
+    - Quick Start: getting-started/quick-start.md
+    - Installation: getting-started/installation.md
+    - Configuration: getting-started/configuration.md
+  
+  - Spec-Coding Methodology:
+    - Introduction: spec-coding/introduction.md
+    - Requirements: spec-coding/requirements.md
+    - Design: spec-coding/design.md
+    - Sprint Planning: spec-coding/sprint-planning.md
+    - Verification: spec-coding/verification.md
+  
+  - Architecture:
+    - Overview: architecture/overview.md
+    - Data Model: architecture/data-model.md
+    - API Design: architecture/api-design.md
+    - Data Access Patterns: architecture/data-access-patterns.md
+    - Federated Query Analysis: architecture/federated-query-analysis.md
+  
+  - User Guide:
+    - Dashboard: user-guide/dashboard.md
+    - Device Details: user-guide/device-details.md
+    - Anomaly Detection: user-guide/anomaly-detection.md
+    - Filtering & Search: user-guide/filtering.md
+  
+  - API Reference:
+    - Overview: api/overview.md
+    - Endpoints: api/endpoints.md
+    - Data Models: api/data-models.md
+    - Error Handling: api/error-handling.md
+  
+  - Development:
+    - Setup: development/setup.md
+    - Testing: development/testing.md
+    - Observability: development/observability.md
+    - Contributing: development/contributing.md
+  
+  - Operations:
+    - Demo Readiness: operations/demo-readiness.md
+    - Troubleshooting: operations/troubleshooting.md
+    - Windows Setup: operations/windows-setup.md
+    - Performance: operations/performance.md
+  
+  - Reference:
+    - Requirements Traceability: reference/requirements-traceability.md
+    - Project Summary: reference/project-summary.md
+    - Installation Summary: reference/installation-summary.md
+    - Final Report: reference/final-report.md
+
+# Made with Bob
