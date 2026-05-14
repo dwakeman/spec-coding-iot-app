@@ -1,0 +1,895 @@
+openapi: 3.1.0
+info:
+  title: Sensor Health Dashboard API
+  version: 1.0.0
+  summary: Read-only API for IoT sensor health monitoring through the Presto engine across Cassandra and Iceberg sources.
+  description: |
+    OpenAPI contract for the starter IoT Sensor Health Dashboard.
+
+    The API exposes read-only endpoints for:
+    - fleet device listing
+    - device detail retrieval
+    - last-hour sensor readings
+    - 7-day baseline comparisons
+    - open alert context
+    - composite device health detail
+    - site filter metadata
+
+    The application accesses all source data through the Presto engine in watsonx.data.
+    Hot operational data originates from Cassandra tables in the `iot` keyspace and is accessed through the Presto `cassandra` catalog.
+    Historical baseline data originates from Iceberg tables in the `iceberg_data.iot` schema and is accessed through Presto.
+
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+tags:
+  - name: Devices
+    description: Device inventory, device health, and device detail endpoints
+  - name: Readings
+    description: Last-hour reading endpoints
+  - name: Baselines
+    description: Historical baseline endpoints
+  - name: Alerts
+    description: Open alert endpoints
+  - name: Sites
+    description: Site metadata endpoints
+
+paths:
+  /api/v1/devices:
+    get:
+      tags: [Devices]
+      operationId: listDevices
+      summary: List devices for the dashboard
+      description: |
+        Returns a paginated dashboard list of devices from current operational data,
+        with optional anomaly and alert enrichment.
+
+        The backend fulfills this endpoint through Presto, querying Cassandra-backed
+        operational tables and Iceberg-backed analytical tables as needed.
+
+        Supports requirements:
+        - REQ-001
+        - REQ-005
+        - REQ-006
+        - REQ-008
+        - REQ-009
+        - REQ-010
+        - REQ-011
+      parameters:
+        - $ref: '#/components/parameters/SiteIdQuery'
+        - $ref: '#/components/parameters/StatusQuery'
+        - $ref: '#/components/parameters/AnomalyStatusQuery'
+        - $ref: '#/components/parameters/PageQuery'
+        - $ref: '#/components/parameters/PageSizeQuery'
+        - $ref: '#/components/parameters/SortQuery'
+        - name: includeAlerts
+          in: query
+          description: Include per-device open alert summary enrichment.
+          schema:
+            type: boolean
+            default: true
+        - name: includeAnomalies
+          in: query
+          description: Include anomaly summary enrichment derived from recent readings and 7-day baseline.
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Paginated device dashboard result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  /api/v1/devices/{deviceId}:
+    get:
+      tags: [Devices]
+      operationId: getDevice
+      summary: Get current device state
+      description: |
+        Returns the current state for a single device.
+
+        The backend resolves this resource through Presto against the Cassandra catalog.
+
+        Supports requirements:
+        - REQ-001
+        - REQ-007
+        - REQ-008
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdPath'
+      responses:
+        '200':
+          description: Current device state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  /api/v1/devices/{deviceId}/readings:
+    get:
+      tags: [Readings]
+      operationId: getDeviceReadings
+      summary: Get last-hour readings for a device
+      description: |
+        Returns the most recent 60 minutes of readings for a device,
+        assembled from one or more `readings_hot` hour buckets.
+
+        The backend resolves this resource through Presto against the Cassandra catalog.
+
+        Supports requirements:
+        - REQ-002
+        - REQ-008
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdPath'
+        - name: windowMinutes
+          in: query
+          description: Sliding time window in minutes. Starter implementation defaults to 60.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 60
+            default: 60
+      responses:
+        '200':
+          description: Last-hour readings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceReadingsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  /api/v1/devices/{deviceId}/baseline:
+    get:
+      tags: [Baselines]
+      operationId: getDeviceBaseline
+      summary: Get 7-day baseline metrics for a device
+      description: |
+        Returns historical per-metric baseline statistics derived from
+        `iceberg_data.iot.hourly_aggregates` through Presto.
+
+        Supports requirements:
+        - REQ-003
+        - REQ-008
+        - REQ-009
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdPath'
+        - name: windowDays
+          in: query
+          description: Historical baseline window in days.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 30
+            default: 7
+      responses:
+        '200':
+          description: 7-day device baseline
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceBaselineResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  /api/v1/devices/{deviceId}/alerts:
+    get:
+      tags: [Alerts]
+      operationId: getDeviceAlerts
+      summary: Get open alerts for a device
+      description: |
+        Returns open alert context for a device from `alerts_open`.
+
+        The backend resolves this resource through Presto against the Cassandra catalog.
+
+        Supports requirements:
+        - REQ-005
+        - REQ-007
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdPath'
+      responses:
+        '200':
+          description: Device open alerts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceAlertsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  /api/v1/devices/{deviceId}/health:
+    get:
+      tags: [Devices]
+      operationId: getDeviceHealth
+      summary: Get composite device health detail
+      description: |
+        Returns a composite payload for a single device including:
+        - current state
+        - last-hour readings
+        - 7-day baseline metrics
+        - open alerts
+        - per-metric anomaly evaluation
+        - device-level anomaly summary
+
+        The backend resolves this resource through Presto, combining Cassandra-backed
+        operational tables with Iceberg-backed analytical data.
+
+        Supports requirements:
+        - REQ-002
+        - REQ-003
+        - REQ-004
+        - REQ-005
+        - REQ-007
+        - REQ-008
+        - REQ-009
+        - REQ-010
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdPath'
+        - name: windowMinutes
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 60
+            default: 60
+        - name: baselineDays
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 30
+            default: 7
+      responses:
+        '200':
+          description: Composite device health detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceHealthResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  /api/v1/sites:
+    get:
+      tags: [Sites]
+      operationId: listSites
+      summary: List sites available for filtering
+      description: |
+        Returns distinct site identifiers present in current device state.
+
+        The backend resolves this resource through Presto against the Cassandra catalog.
+
+        Supports requirements:
+        - REQ-006
+        - REQ-010
+      responses:
+        '200':
+          description: List of available sites
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteListResponse'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+components:
+  parameters:
+    DeviceIdPath:
+      name: deviceId
+      in: path
+      required: true
+      description: UUID of the device.
+      schema:
+        type: string
+        format: uuid
+
+    SiteIdQuery:
+      name: siteId
+      in: query
+      description: Filter devices by site ID.
+      schema:
+        type: string
+
+    StatusQuery:
+      name: status
+      in: query
+      description: Filter devices by current status.
+      schema:
+        $ref: '#/components/schemas/DeviceStatus'
+
+    AnomalyStatusQuery:
+      name: anomalyStatus
+      in: query
+      description: Filter devices by anomaly status.
+      schema:
+        $ref: '#/components/schemas/AnomalyStatus'
+
+    PageQuery:
+      name: page
+      in: query
+      description: 1-based result page.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+
+    PageSizeQuery:
+      name: pageSize
+      in: query
+      description: Result page size.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 25
+
+    SortQuery:
+      name: sort
+      in: query
+      description: Sort field for dashboard listing.
+      schema:
+        type: string
+        enum:
+          - lastHeartbeat
+          - batteryPercent
+          - signalStrengthDbm
+          - anomalyStatus
+          - openAlertCount
+          - status
+
+  responses:
+    BadRequest:
+      description: Invalid request input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    NotFound:
+      description: Requested resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    UnprocessableEntity:
+      description: Request is syntactically valid but semantically unsupported
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    BadGateway:
+      description: Upstream Presto query or source-connector failure
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    ServiceUnavailable:
+      description: Presto engine or dependent source temporarily unavailable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+  schemas:
+    DeviceStatus:
+      type: string
+      enum: [online, offline, degraded, maintenance]
+
+    AnomalyStatus:
+      type: string
+      enum: [normal, anomalous, unknown]
+
+    AlertSeverity:
+      type: string
+      enum: [low, medium, high, critical]
+
+    AlertType:
+      type: string
+      enum: [threshold, anomaly, offline, battery_low]
+
+    QualityCode:
+      type: string
+      enum: [good, suspect, bad]
+
+    DataFreshness:
+      type: string
+      enum: [fresh, stale, unavailable]
+
+    RequirementId:
+      type: string
+      pattern: '^REQ-[0-9]{3}$'
+
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - error
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorBody'
+
+    ErrorBody:
+      type: object
+      additionalProperties: false
+      required:
+        - code
+        - message
+        - requestId
+      properties:
+        code:
+          type: string
+          examples: [INVALID_ARGUMENT, NOT_FOUND, UNSUPPORTED_QUERY, UPSTREAM_FAILURE, SERVICE_UNAVAILABLE]
+        message:
+          type: string
+        requestId:
+          type: string
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+
+    ErrorDetail:
+      type: object
+      additionalProperties: false
+      required:
+        - field
+        - issue
+      properties:
+        field:
+          type: string
+        issue:
+          type: string
+
+    RequirementTrace:
+      type: object
+      additionalProperties: false
+      required:
+        - requirementIds
+      properties:
+        requirementIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/RequirementId'
+
+    Device:
+      type: object
+      additionalProperties: false
+      required:
+        - deviceId
+        - deviceType
+        - deviceClass
+        - model
+        - firmwareVersion
+        - status
+        - lastHeartbeat
+        - batteryPercent
+        - signalStrengthDbm
+        - siteId
+        - zone
+        - dataFreshness
+      properties:
+        deviceId:
+          type: string
+          format: uuid
+        deviceType:
+          type: string
+          examples: [sensor, gateway, actuator, camera]
+        deviceClass:
+          type: string
+          examples: [temperature, humidity, pressure, vibration, energy, presence]
+        model:
+          type: string
+        firmwareVersion:
+          type: string
+        status:
+          $ref: '#/components/schemas/DeviceStatus'
+        lastHeartbeat:
+          type: string
+          format: date-time
+        lastReadingValue:
+          type: number
+          nullable: true
+        batteryPercent:
+          type: integer
+        signalStrengthDbm:
+          type: integer
+        siteId:
+          type: string
+        zone:
+          type: string
+        installedAt:
+          type: string
+          format: date-time
+          nullable: true
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+        dataFreshness:
+          $ref: '#/components/schemas/DataFreshness'
+
+    DeviceSummary:
+      allOf:
+        - $ref: '#/components/schemas/Device'
+        - type: object
+          additionalProperties: false
+          required:
+            - anomalyStatus
+            - anomalyMetricCount
+            - openAlertCount
+          properties:
+            anomalyStatus:
+              $ref: '#/components/schemas/AnomalyStatus'
+            anomalyMetricCount:
+              type: integer
+              minimum: 0
+            highestAlertSeverity:
+              allOf:
+                - $ref: '#/components/schemas/AlertSeverity'
+              nullable: true
+            openAlertCount:
+              type: integer
+              minimum: 0
+            supportedRequirements:
+              $ref: '#/components/schemas/RequirementTrace'
+
+    Reading:
+      type: object
+      additionalProperties: false
+      required:
+        - readingTimestamp
+        - metricName
+        - metricValue
+        - unit
+        - qualityCode
+      properties:
+        readingTimestamp:
+          type: string
+          format: date-time
+        metricName:
+          type: string
+        metricValue:
+          type: number
+        unit:
+          type: string
+        qualityCode:
+          $ref: '#/components/schemas/QualityCode'
+        readingBucketHour:
+          type: string
+          format: date-time
+
+    MetricBaseline:
+      type: object
+      additionalProperties: false
+      required:
+        - metricName
+        - baselineWindowDays
+        - sampleCount
+      properties:
+        metricName:
+          type: string
+        baselineAvg:
+          type: number
+          nullable: true
+        baselineP95:
+          type: number
+          nullable: true
+        baselineMin:
+          type: number
+          nullable: true
+        baselineMax:
+          type: number
+          nullable: true
+        baselineStddev:
+          type: number
+          nullable: true
+        sampleCount:
+          type: integer
+          minimum: 0
+        baselineWindowDays:
+          type: integer
+          minimum: 1
+        baselineWindowHoursCovered:
+          type: integer
+          minimum: 0
+          nullable: true
+
+    Alert:
+      type: object
+      additionalProperties: false
+      required:
+        - alertId
+        - raisedAt
+        - severity
+        - alertType
+        - acknowledged
+      properties:
+        alertId:
+          type: string
+          format: uuid
+        raisedAt:
+          type: string
+          format: date-time
+        severity:
+          $ref: '#/components/schemas/AlertSeverity'
+        alertType:
+          $ref: '#/components/schemas/AlertType'
+        metricName:
+          type: string
+          nullable: true
+        metricValue:
+          type: number
+          nullable: true
+        thresholdValue:
+          type: number
+          nullable: true
+        siteId:
+          type: string
+        acknowledged:
+          type: boolean
+
+    MetricHealth:
+      type: object
+      additionalProperties: false
+      required:
+        - metricName
+        - recentReadingCount
+        - anomalyStatus
+      properties:
+        metricName:
+          type: string
+        latestReading:
+          $ref: '#/components/schemas/Reading'
+        recentReadingCount:
+          type: integer
+          minimum: 0
+        anomalyStatus:
+          $ref: '#/components/schemas/AnomalyStatus'
+        anomalyReason:
+          type: string
+          nullable: true
+        baseline:
+          $ref: '#/components/schemas/MetricBaseline'
+
+    Pagination:
+      type: object
+      additionalProperties: false
+      required:
+        - page
+        - pageSize
+        - totalItems
+        - totalPages
+      properties:
+        page:
+          type: integer
+          minimum: 1
+        pageSize:
+          type: integer
+          minimum: 1
+        totalItems:
+          type: integer
+          minimum: 0
+        totalPages:
+          type: integer
+          minimum: 0
+
+    DeviceListResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+        - pagination
+        - supportedRequirements
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceSummary'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        supportedRequirements:
+          $ref: '#/components/schemas/RequirementTrace'
+
+    DeviceResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - item
+        - supportedRequirements
+      properties:
+        item:
+          $ref: '#/components/schemas/Device'
+        supportedRequirements:
+          $ref: '#/components/schemas/RequirementTrace'
+
+    DeviceReadingsResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - deviceId
+        - windowMinutes
+        - items
+        - supportedRequirements
+      properties:
+        deviceId:
+          type: string
+          format: uuid
+        windowMinutes:
+          type: integer
+          minimum: 1
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reading'
+        supportedRequirements:
+          $ref: '#/components/schemas/RequirementTrace'
+
+    DeviceBaselineResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - deviceId
+        - windowDays
+        - items
+        - supportedRequirements
+      properties:
+        deviceId:
+          type: string
+          format: uuid
+        windowDays:
+          type: integer
+          minimum: 1
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetricBaseline'
+        supportedRequirements:
+          $ref: '#/components/schemas/RequirementTrace'
+
+    DeviceAlertsResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - deviceId
+        - items
+        - supportedRequirements
+      properties:
+        deviceId:
+          type: string
+          format: uuid
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alert'
+        supportedRequirements:
+          $ref: '#/components/schemas/RequirementTrace'
+
+    DeviceHealthSummary:
+      type: object
+      additionalProperties: false
+      required:
+        - anomalyStatus
+        - anomalyMetricCount
+        - openAlertCount
+        - dataFreshness
+      properties:
+        anomalyStatus:
+          $ref: '#/components/schemas/AnomalyStatus'
+        anomalyMetricCount:
+          type: integer
+          minimum: 0
+        highestAlertSeverity:
+          allOf:
+            - $ref: '#/components/schemas/AlertSeverity'
+          nullable: true
+        openAlertCount:
+          type: integer
+          minimum: 0
+        dataFreshness:
+          $ref: '#/components/schemas/DataFreshness'
+
+    DeviceHealthResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - device
+        - summary
+        - metricHealth
+        - readings
+        - alerts
+        - supportedRequirements
+      properties:
+        device:
+          $ref: '#/components/schemas/Device'
+        summary:
+          $ref: '#/components/schemas/DeviceHealthSummary'
+        metricHealth:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetricHealth'
+        readings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reading'
+        alerts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alert'
+        supportedRequirements:
+          $ref: '#/components/schemas/RequirementTrace'
+
+    Site:
+      type: object
+      additionalProperties: false
+      required:
+        - siteId
+      properties:
+        siteId:
+          type: string
+        deviceCount:
+          type: integer
+          minimum: 0
+          nullable: true
+
+    SiteListResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+        - supportedRequirements
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Site'
+        supportedRequirements:
+          $ref: '#/components/schemas/RequirementTrace'
+
+# Made with Bob

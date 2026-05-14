@@ -1,0 +1,21 @@
+.env
+.watsonx-data/
+
+# macOS Finder metadata
+.DS_Store
+**/.DS_Store
+
+# Generated sample data (reproduced by setup/sample-data/*/generate_data.py)
+setup/sample-data/*/generated_data/
+
+# Python artifacts
+setup/sample-data/__pycache__/
+setup/sample-data/.venv/
+
+# Workshop install state (machine-local)
+.workshop-installed
+.workshop-timing.log
+.claude/
+dist/
+
+**/node_modules
